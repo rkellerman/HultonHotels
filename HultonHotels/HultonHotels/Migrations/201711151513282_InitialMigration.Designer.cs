@@ -13,7 +13,7 @@ namespace HultonHotels.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201711150230433_InitialMigration"; }
+            get { return "201711151513282_InitialMigration"; }
         }
         
         string IMigrationMetadata.Source

@@ -201,27 +201,31 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201711150230433_InitialMigration.cs" />
-    <Compile Include="Migrations\201711150230433_InitialMigration.Designer.cs">
-      <DependentUpon>201711150230433_InitialMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201711150245143_InitialMigration1.cs" />
-    <Compile Include="Migrations\201711150245143_InitialMigration1.Designer.cs">
-      <DependentUpon>201711150245143_InitialMigration1.cs</DependentUpon>
+    <Compile Include="Migrations\201711151513282_InitialMigration.cs" />
+    <Compile Include="Migrations\201711151513282_InitialMigration.Designer.cs">
+      <DependentUpon>201711151513282_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
-    <Compile Include="Models\Breakfast.cs" />
-    <Compile Include="Models\CreditCard.cs" />
-    <Compile Include="Models\Customer.cs" />
-    <Compile Include="Models\Hotel.cs" />
+    <Compile Include="Models\Relationships\CustomerMakesReservationWithCreditCard.cs" />
+    <Compile Include="Models\Relationships\CustomerWritesReview.cs" />
+    <Compile Include="Models\Entities\Breakfast.cs" />
+    <Compile Include="Models\Entities\CreditCard.cs" />
+    <Compile Include="Models\Entities\Customer.cs" />
+    <Compile Include="Models\Entities\Hotel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\Reservation.cs" />
-    <Compile Include="Models\Review.cs" />
-    <Compile Include="Models\Room.cs" />
-    <Compile Include="Models\Service.cs" />
+    <Compile Include="Models\Managers\MetricsManager.cs" />
+    <Compile Include="Models\Managers\RegistrationManager.cs" />
+    <Compile Include="Models\Entities\Reservation.cs" />
+    <Compile Include="Models\Managers\ReservationManager.cs" />
+    <Compile Include="Models\Entities\Review.cs" />
+    <Compile Include="Models\Entities\Room.cs" />
+    <Compile Include="Models\Entities\Service.cs" />
+    <Compile Include="Models\Relationships\ReservationContainsService.cs" />
+    <Compile Include="Models\Relationships\ReservationIncludesBreakfast.cs" />
+    <Compile Include="Models\Relationships\ReservationReservesRoom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -288,6 +292,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -298,11 +303,8 @@
     <Content Include="Scripts\jquery-1.10.2.min.map" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201711150230433_InitialMigration.resx">
-      <DependentUpon>201711150230433_InitialMigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201711150245143_InitialMigration1.resx">
-      <DependentUpon>201711150245143_InitialMigration1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201711151513282_InitialMigration.resx">
+      <DependentUpon>201711151513282_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
