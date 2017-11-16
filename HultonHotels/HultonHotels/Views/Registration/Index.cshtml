@@ -1,0 +1,86 @@
+﻿@model HultonHotels.ViewModels.RegistrationViewModel
+@{
+    ViewBag.Title = "Registration";
+}
+
+<h2>Registration</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h1 class="panel-title">Search for Customers</h1>
+        </div>
+        <div class="panel-body">
+            <div class="form-group">
+                @Html.Label("Search")
+                @Html.TextBox("TextBox", "TextBox", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="panel-footer">
+            <button id="btnSearch" class="btn btn-sm btn-primary" data-pdsa-action="search">
+                <i class="glyphicon glyphicon-share-alt"></i>
+                &nbsp;Search
+            </button>
+            <button id="btnReset" class="btn btn-sm btn-primary" data-pdsa-action="resetsearch">
+                <i class="glyphicon glyphicon-share-alt"></i>
+                &nbsp;Reset
+            </button>
+        </div>
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h1 class="panel-title">Customer Information</h1>
+        </div>
+        <div class="panel-body">
+
+            <!--BEGIN MESSAGE AREA-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <!--VALIDATION-->
+                </div>
+            </div>
+            <!--END MESSAGE AREA-->
+
+            <div class="form-group">
+                @Html.Label("Label")
+                @Html.TextBox("TextBox", "TextBox", new {@class="form-control"})
+            </div>
+            <div class="form-group">
+                @Html.Label("Label")
+                @Html.TextBox("TextBox", "TextBox", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.Label("Label")
+                @Html.TextBox("TextBox", "TextBox", new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                @Html.Label("Label")
+                @Html.TextBox("TextBox", "TextBox", new { @class = "form-control" })
+            </div>
+            <div>
+                <!--HIDDEN ITEMS-->
+            </div>
+        </div>
+        <div class="panel-footer">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button id="btnSave" class="btn btn-sm btn-primary" data-pdsa-action="save"
+                            data-pdsa-val-2="@Model">
+                        <i class="glyphicon glyphicon-floppy-disk"></i>
+                        &nbsp;Save
+                    </button>
+                    <button id="btnCancel" class="btn btn-sm btn-primary" data-pdsa-action="cancel"
+                            formnovalidate="formnovalidate">
+                        <i class="glyphicon glyphicon-remove-circle"></i>
+                        &nbsp;Cancel
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
