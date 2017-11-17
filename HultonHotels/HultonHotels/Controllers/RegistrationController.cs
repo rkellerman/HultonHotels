@@ -20,6 +20,7 @@ namespace HultonHotels.Controllers
         [HttpPost]
         public ActionResult Index(RegistrationViewModel vm)
         {
+
             vm.HandleRequest();
             return View(vm);
         }

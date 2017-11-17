@@ -1,7 +1,82 @@
 ﻿
+@model HultonHotels.ViewModels.ReservationViewModel
 @{
     ViewBag.Title = "Index";
 }
 
 <h2>Index</h2>
 
+@using (Html.BeginForm())
+{
+    if (Model.IsSearchAreaVisible)
+    {
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h1 class="panel-title">Search for Products</h1>
+            </div>
+            <div class="panel-body">
+                <div class="form-group">
+                    @Html.LabelFor(m => m.SearchEntity.HotelAddress, "Search by Address")
+                    @Html.TextBoxFor(m => m.SearchEntity.HotelAddress, new { @class = "form-control" })
+                </div>
+            </div>
+            <div class="panel-footer">
+                <button id="btnSearch" class="btn btn-sm btn-primary" data-pdsa-action="search">
+                    <i class="glyphicon glyphicon-share-alt"></i>
+                    &nbsp;Search
+                </button>
+                <button id="btnReset" class="btn btn-sm btn-primary" data-pdsa-action="resetsearch">
+                    <i class="glyphicon glyphicon-share-alt"></i>
+                    &nbsp;Reset
+                </button>
+            </div>
+        </div>
+    }
+
+    <!--BEGIN LIST AREA-->
+    if (Model.IsListAreaVisible)
+    {
+        <div class="table-respnosive">
+            <table class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="pdsa-action-button-column">Edit</th>
+                        <th>Hotel Address</th>
+                        <th>Room Number</th>
+                        <th>Price</th>
+                        <th>Capacity</th>
+                        <th class="pdsa-action-button-column">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+
+                        <tr>
+                            <td class="pdsa-action-button-column">
+                                <a href="#" class="btn btn-default btn-sm" data-pdsa-action="edit"
+                                   data-pdsa-val="@item.HotelId"
+                                   data-pdsa-val-2="@item.RoomNo">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                </a>
+                            </td>
+                            <td>@item.HotelAddress</td>
+                            <td>@item.RoomNo</td>
+                            <td>@item.Price </td>
+                            <td>@item.Capacity</td>
+                            <td class="pdsa-action-button-column">
+                                <a href="#" class="btn btn-default btn-sm" data-pdsa-action="delete"
+                                   data-pdsa-val="@item.HotelId"
+                                   data-pdsa-val-2="@item.RoomNo"
+                                   onclick="confirmation();">
+                                    <i class="glyphicon glyphicon-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    <!--END LIST AREA-->
+}

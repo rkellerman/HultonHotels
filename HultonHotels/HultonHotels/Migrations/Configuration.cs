@@ -1,3 +1,8 @@
+using System.Collections.Generic;
+using HultonHotels.Models;
+using Microsoft.Ajax.Utilities;
+using Newtonsoft.Json.Linq;
+
 namespace HultonHotels.Migrations
 {
     using System;
@@ -12,20 +17,69 @@ namespace HultonHotels.Migrations
             AutomaticMigrationsEnabled = false;
         }
 
+        
+
         protected override void Seed(HultonHotels.Models.ApplicationDbContext context)
         {
-            //  This method will be called after migrating to the latest version.
 
-            //  You can use the DbSet<T>.AddOrUpdate() helper extension method 
-            //  to avoid creating duplicate seed data. E.g.
-            //
-            //    context.People.AddOrUpdate(
-            //      p => p.FullName,
-            //      new Person { FullName = "Andrew Peters" },
-            //      new Person { FullName = "Brice Lambson" },
-            //      new Person { FullName = "Rowan Miller" }
-            //    );
-            //
+            var streets = new List<string>
+            {
+                "10 Vliet Drive",
+                "22 Amwell Road",
+                "40 Easton Avenue",
+                "100 College Avenue",
+                "1 Mine Street"
+
+            };
+
+            var cities = new List<string>
+            {
+                "New Brunswick",
+                "Princeton",
+                "Montgomery",
+                "Hillsborough",
+                "Trenton"
+            };
+
+            Random random = new Random();
+
+            for (var j = 0; j < 5; j++)
+            {
+                Hotel hotel = new Hotel
+                {
+                    Street = streets[j],
+                    City = cities[j],
+                    Country = "United States",
+                    State = "New Jersey",
+                    Zip = random.Next(10000, 99999)
+                };
+
+                context.Hotels.Add(hotel);
+                context.SaveChanges();
+
+                for (var i = 0; i < 10; i++)
+                {
+                    Room room = new Room
+                    {
+                        Hotel = hotel,
+                        Capacity = random.Next(1, 5),
+                        Description = "Just a simple room",
+                        Price = (decimal)random.Next(10, 100) + (decimal)i,
+                        RoomNo = i + j*10,
+                        Type = "Suite"
+                    };
+
+                    context.Rooms.Add(room);
+                    context.SaveChanges();
+                }
+
+                
+
+
+            }
+
+
+            
         }
     }
 }

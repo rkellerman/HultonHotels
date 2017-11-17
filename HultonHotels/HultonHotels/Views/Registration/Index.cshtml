@@ -1,4 +1,5 @@
-﻿@model HultonHotels.ViewModels.RegistrationViewModel
+﻿@using Microsoft.Ajax.Utilities
+@model HultonHotels.ViewModels.RegistrationViewModel
 @{
     ViewBag.Title = "Registration";
 }
@@ -7,6 +8,14 @@
 
 @using (Html.BeginForm())
 {
+    <!--BEGIN HIDDEN FIELD AREA-->
+    @Html.HiddenFor(m => m.EventArgument)
+    @Html.HiddenFor(m => m.EventCommand)
+    @Html.HiddenFor(m => m.PrevEventArgument)
+    @Html.HiddenFor(m => m.PrevEntity)
+    <!--END HIDDEN FIELD AREA-->
+
+    <!--BEGIN SEARCH AREA-->
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h1 class="panel-title">Search for Customers</h1>
@@ -14,7 +23,7 @@
         <div class="panel-body">
             <div class="form-group">
                 @Html.Label("Search")
-                @Html.TextBox("TextBox", "TextBox", new { @class = "form-control" })
+                @Html.TextBoxFor(m => m.SearchEntity.Email, new { @class = "form-control" })
             </div>
         </div>
         <div class="panel-footer">
@@ -28,7 +37,9 @@
             </button>
         </div>
     </div>
+    <!--END SEARCH AREA-->
 
+    <!--BEGIN INPUT AREA-->
     <div class="panel panel-primary">
         <div class="panel-heading">
             <h1 class="panel-title">Customer Information</h1>
@@ -44,20 +55,20 @@
             <!--END MESSAGE AREA-->
 
             <div class="form-group">
-                @Html.Label("Label")
-                @Html.TextBox("TextBox", "TextBox", new {@class="form-control"})
+                @Html.Label("Name")
+                @Html.TextBoxFor(m => m.Entity.Name, new {@class="form-control"})
             </div>
             <div class="form-group">
-                @Html.Label("Label")
-                @Html.TextBox("TextBox", "TextBox", new { @class = "form-control" })
+                @Html.Label("Email")
+                @Html.TextBoxFor(m => m.Entity.Email, new { @class = "form-control" })
             </div>
             <div class="form-group">
-                @Html.Label("Label")
-                @Html.TextBox("TextBox", "TextBox", new { @class = "form-control" })
+                @Html.Label("Address")
+                @Html.TextBoxFor(m => m.Entity.Address, new { @class = "form-control" })
             </div>
             <div class="form-group">
-                @Html.Label("Label")
-                @Html.TextBox("TextBox", "TextBox", new { @class = "form-control" })
+                @Html.Label("Phone Number")
+                @Html.TextBoxFor(m => m.Entity.PhoneNo, new { @class = "form-control", type="number" })
             </div>
             <div>
                 <!--HIDDEN ITEMS-->
@@ -67,7 +78,7 @@
             <div class="row">
                 <div class="col-sm-12">
                     <button id="btnSave" class="btn btn-sm btn-primary" data-pdsa-action="save"
-                            data-pdsa-val-2="@Model">
+                            data-pdsa-val-2="@Model.PrevEventArgument">
                         <i class="glyphicon glyphicon-floppy-disk"></i>
                         &nbsp;Save
                     </button>
@@ -81,6 +92,25 @@
             </div>
         </div>
     </div>
+    <!--END INPUT AREA-->
+}
+
+@section scripts {
+    <script>
+
+        $(document).ready(function() {
+            $("[data-pdsa-action]").on("click",
+                function(e) {
+                    e.preventDefault();
+                    debugger;
+                    $("#EventCommand").val($(this).data("pdsa-action"));
+                    $("#EventArgument").val($(this).data("pdsa-val"));
+                    $("#PrevEventArgument").val($(this).data("pdsa-val-2"));
+                    $("form").submit();
+
+                });
+        });
+    </script>
 }
 
 
