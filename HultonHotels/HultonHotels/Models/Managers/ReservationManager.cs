@@ -56,5 +56,69 @@ namespace HultonHotels.Models
             }
             return ret;
         }
+
+        public ReservationObject Select(string eventArgument, string prevEventArgument)
+        {
+            int hotelId = int.Parse(eventArgument);
+            int roomNo = int.Parse(prevEventArgument);
+
+            var hotel = _context.Hotels.FirstOrDefault(h => h.HotelId == hotelId);
+            var room = _context.Rooms.FirstOrDefault(r => r.RoomNo == roomNo);
+
+            var ret = new ReservationObject
+            {
+                Capacity = room.Capacity,
+                CreditCard = new CreditCard(),
+                HotelAddress = hotel.Street + ", " + hotel.City + ", " + hotel.State + " " + hotel.Zip,
+                HotelId = hotel.HotelId,
+                Price = room.Price,
+                RoomNo = room.RoomNo
+            };
+
+            return ret;
+        }
+
+        public int Login(string searchEntityEmail)
+        {
+            return _context.Customers.FirstOrDefault(c => c.Email == searchEntityEmail).CustomerId;
+        }
+
+        public void Save(ReservationObject entity, string email)
+        {
+            var customer = _context.Customers.FirstOrDefault(c => c.Email == email);
+
+            var reservation = new Reservation
+            {
+                Amount = entity.Price,
+                ReservationDate = DateTime.Now
+            };
+
+            var creditCard = new CreditCard
+            {
+                BillingAddress = entity.CreditCard.BillingAddress,
+                CreditCardId = entity.CreditCard.CreditCardId,
+                ExpDate = DateTime.Now,
+                NameOnCard = entity.CreditCard.NameOnCard,
+                SecurityCode = entity.CreditCard.SecurityCode,
+                Type = entity.CreditCard.Type
+            };
+
+            _context.Reservations.Add(reservation);
+            _context.CreditCards.Add(creditCard);
+            _context.SaveChanges();
+
+            var customerMakesReservationWithCreditCard = new CustomerMakesReservationWithCreditCard
+            {
+                CreditCard = creditCard,
+                CreditCardId = creditCard.CreditCardId,
+                Customer = customer,
+                CustomerId = customer.CustomerId,
+                Reservation = reservation,
+                ReservationId = reservation.ReservationId
+            };
+
+            _context.CustomerMakesReservationWithCreditCards.Add(customerMakesReservationWithCreditCard);
+            _context.SaveChanges();
+        }
     }
 }
