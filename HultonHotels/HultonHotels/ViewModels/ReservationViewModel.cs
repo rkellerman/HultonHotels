@@ -5,6 +5,7 @@ using System.Net.Sockets;
 using System.Web;
 using System.Web.Mvc;
 using HultonHotels.Models;
+using HultonHotels.Utilities;
 using HultonHotels.ViewModels.Objects;
 
 namespace HultonHotels.ViewModels
@@ -146,6 +147,27 @@ namespace HultonHotels.ViewModels
             var ret = mgr.Get(SearchEntity);
             Items = ret[0];
             MyItems = ret[1];
+
+            if (!string.IsNullOrEmpty(EventArgument))
+            {
+                CurrentPage = int.Parse(EventArgument);
+            }
+
+            TotalPages = (int)Math.Ceiling((double)Items.Count / (double)ItemsPerPage) - 1;
+            if (TotalPages < 0) TotalPages = 0;
+
+            if (CurrentPage > TotalPages)
+            {
+                CurrentPage = 0;
+            }
+            else if (CurrentPage < 0)
+            {
+                CurrentPage = TotalPages;
+            }
+
+            Items = Items.Skip(ItemsPerPage * CurrentPage).Take(ItemsPerPage).ToList();
+
+            Pagination = PaginationHelper.CreatePaginationWithEllipsis(CurrentPage, TotalPages, 6);
 
         }
 

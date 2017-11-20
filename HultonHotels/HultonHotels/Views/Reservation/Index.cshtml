@@ -1,4 +1,5 @@
 ﻿
+@using HultonHotels.Utilities
 @model HultonHotels.ViewModels.ReservationViewModel
 @{
     ViewBag.Title = "Index";
@@ -19,19 +20,20 @@
 
     <!--END HIDDEN FIELD AREA-->
 
-    <div>
-        @Html.TextBoxFor(m => m.SearchEntity.Email)
+    <div class="form-group">
+        @Html.TextBoxFor(m => m.SearchEntity.Email, new {@class="form-control"})
+        <button id="btnSearch" class="btn btn-sm btn-primary" data-pdsa-action="login">
+            <i class="glyphicon glyphicon-share-alt"></i>
+            &nbsp;Login
+        </button>
     </div>
-    <button id="btnSearch" class="btn btn-sm btn-primary" data-pdsa-action="login">
-        <i class="glyphicon glyphicon-share-alt"></i>
-        &nbsp;Login
-    </button>
+    
 
     if (Model.IsSearchAreaVisible)
     {
         <div class="panel panel-primary">
             <div class="panel-heading">
-                <h1 class="panel-title">Search for Products</h1>
+                <h1 class="panel-title">Search for Available Reservations</h1>
             </div>
             <div class="panel-body">
                 <div class="form-group">
@@ -133,6 +135,9 @@
     <!--BEGIN MY RESERVATIONS AREA-->
     if (Model.IsMyReservationsAreaVisible)
     {
+        <div class="bold">
+            @Html.Label("My Reservations")
+        </div>
         <div class="table-respnosive">
             <table class="table table-condensed table-bordered table-striped table-hover">
                 <thead>
@@ -172,42 +177,89 @@
     <!--BEGIN LIST AREA-->
     if (Model.IsListAreaVisible)
     {
+        <div class="bold">
+            @Html.Label("Available For Reservation")
+        </div>
         <div class="table-respnosive">
             <table class="table table-condensed table-bordered table-striped table-hover">
                 <thead>
-                    <tr>
-                        <th class="pdsa-action-button-column">View Options</th>
-                        <th>Hotel Address</th>
-                        <th>Room Number</th>
-                        <th>Price</th>
-                        <th>Capacity</th>
-                    </tr>
+                <tr>
+                    <th class="pdsa-action-button-column">View Options</th>
+                    <th>Hotel Address</th>
+                    <th>Room Number</th>
+                    <th>Price</th>
+                    <th>Capacity</th>
+                </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Items)
-                    {
+                @foreach (var item in Model.Items)
+                {
 
-                        <tr>
-                            <td class="pdsa-action-button-column">
-                                <a href="#" class="btn btn-default btn-sm" data-pdsa-action="select"
-                                   data-pdsa-val="@item.HotelId"
-                                   data-pdsa-val-2="@item.RoomNo">
-                                    <i class="glyphicon glyphicon-edit"></i>
-                                </a>
-                            </td>
-                            <td>@item.HotelAddress</td>
-                            <td>@item.RoomNo</td>
-                            <td>@item.Price </td>
-                            <td>@item.Capacity</td>
-                        </tr>
-                    }
+                    <tr>
+                        <td class="pdsa-action-button-column">
+                            <a href="#" class="btn btn-default btn-sm" data-pdsa-action="select"
+                               data-pdsa-val="@item.HotelId"
+                               data-pdsa-val-2="@item.RoomNo">
+                                <i class="glyphicon glyphicon-edit"></i>
+                            </a>
+                        </td>
+                        <td>@item.HotelAddress</td>
+                        <td>@item.RoomNo</td>
+                        <td>@item.Price </td>
+                        <td>@item.Capacity</td>
+                    </tr>
+                }
                 </tbody>
             </table>
         </div>
     }
     <!--END LIST AREA-->
 
-
+    <!--BEGIN PAGINATION AREA-->
+    if (Model.TotalPages > 0)
+    {
+        <div>
+            <nav aria-label="Page navigation" class="text-center">
+                <ul class="pagination">
+                    @for (var i = 0; i < Model.Pagination.Count; i++)
+                    {
+                        switch (Model.Pagination[i])
+                        {
+                            case PaginationHelper.Ellipse:
+                                 <!--INSERT ELLIPSE BUTTON-->
+                                <li>
+                                    <a href="#">...</a>
+                                </li>
+                                break;
+                            case PaginationHelper.Next:
+                                 <!--INSERT NEXT BUTTON-->
+                                <li data-pdsa-action="list" data-pdsa-val="@(Model.CurrentPage + 1)">
+                                    <a href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                    </a>
+                                </li>
+                                break;
+                            case PaginationHelper.Previous:
+                                 <!--INSERT PREVIOUS BUTTON-->
+                                <li data-pdsa-action="list" data-pdsa-val="@(Model.CurrentPage - 1)">
+                                    <a href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                    </a>
+                                </li>
+                                break;
+                            default:
+                                 <!--INSERT NUMBER BUTTON-->
+                                <li class="@(Model.CurrentPage == Model.Pagination[i] ? "active" : "")" data-pdsa-action="list" data-pdsa-val="@Model.Pagination[i]">
+                                    <a href="#">@(Model.Pagination[i] + 1)</a>
+                                </li>
+                                break;
+                        }
+                    }
+                </ul>
+            </nav>
+        </div>
+    }
+    <!--END PAGINATION AREA-->
 }
 
 @section scripts {
