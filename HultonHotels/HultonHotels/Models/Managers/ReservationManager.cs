@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
+using HultonHotels.Models.Relationships;
 using HultonHotels.ViewModels.Objects;
 
 namespace HultonHotels.Models
@@ -96,8 +98,25 @@ namespace HultonHotels.Models
 
         public ReservationObject Select(string eventArgument, string prevEventArgument)
         {
-            int hotelId = int.Parse(eventArgument);
-            int roomNo = int.Parse(prevEventArgument);
+            var hotelId = int.Parse(eventArgument);
+            var roomNo = int.Parse(prevEventArgument);
+
+            var breakfasts = _context.Breakfasts.Where(b => b.HotelId == hotelId).ToList();
+            var services = _context.Services.Where(s => s.HotelId == hotelId).ToList();
+
+            var breakfastList = new SelectListItem[breakfasts.Count];
+
+            for (var i = 0; i < breakfasts.Count; i++)
+            {
+                breakfastList[i] = new SelectListItem {Text = breakfasts[i].BreakfastType, Value = breakfasts[i].BreakfastType};
+            }
+
+            var serviceList = new SelectListItem[services.Count];
+
+            for (var i = 0; i < services.Count; i++)
+            {
+                serviceList[i] = new SelectListItem {Text = services[i].ServiceType, Value = services[i].ServiceType};
+            }
 
             var hotel = _context.Hotels.FirstOrDefault(h => h.HotelId == hotelId);
             var room = _context.Rooms.FirstOrDefault(r => r.RoomNo == roomNo);
@@ -109,7 +128,12 @@ namespace HultonHotels.Models
                 HotelAddress = hotel.Street + ", " + hotel.City + ", " + hotel.State + " " + hotel.Zip,
                 HotelId = hotel.HotelId,
                 Price = room.Price,
-                RoomNo = room.RoomNo
+                RoomNo = room.RoomNo,
+                ServiceItems = serviceList,
+                ServiceChoice = serviceList[0].Text,
+                BreakfastItems = breakfastList,
+                BreakfastChoice = breakfastList[0].Text
+
             };
 
             return ret;
@@ -124,11 +148,17 @@ namespace HultonHotels.Models
         {
             var customer = _context.Customers.FirstOrDefault(c => c.Email == email);
 
+            var breakfast = _context.Breakfasts.FirstOrDefault(b => b.BreakfastType == entity.BreakfastChoice);
+            var service = _context.Services.FirstOrDefault(s => s.ServiceType == entity.ServiceChoice);
+
             var reservation = new Reservation
             {
-                Amount = entity.Price,
+                Amount = entity.Price * entity.ReservationReservesRoom.NumberOfDays + breakfast.BreakfastCost * entity.ReservationReservesRoom.NumberOfDays + 
+                   service.ServiceCost * entity.ReservationReservesRoom.NumberOfDays,
                 ReservationDate = DateTime.Now
             };
+
+
 
             var creditCard = _context.CreditCards.FirstOrDefault(c => c.CreditCardId == entity.CreditCard.CreditCardId);
 
@@ -150,6 +180,29 @@ namespace HultonHotels.Models
             
             _context.SaveChanges();
 
+            var reservationincludesBreakfast = new ReservationIncludesBreakfast
+            {
+                Breakfast = breakfast,
+                BreakfastType = breakfast.BreakfastType,
+                HotelId = entity.HotelId,
+                Reservation = reservation,
+                ReservationId = reservation.ReservationId
+            };
+
+            var reservationContainsService = new ReservationContainsService
+            {
+                HotelId = entity.HotelId,
+                Reservation = reservation,
+                ReservationId = reservation.ReservationId,
+                Service = service,
+                ServiceType = service.ServiceType
+            };
+
+            _context.ReservationContainsServices.Add(reservationContainsService);
+            _context.ReservationIncludesBreakfasts.Add(reservationincludesBreakfast);
+            _context.SaveChanges();
+
+
             var customerMakesReservationWithCreditCard = new CustomerMakesReservationWithCreditCard
             {
                 CreditCard = creditCard,
@@ -163,9 +216,9 @@ namespace HultonHotels.Models
             var reservationReservesRoom = new ReservationReservesRoom
             {
                 HotelId = entity.HotelId,
-                InDate = DateTime.Now,
-                NumberOfDays = 3,
-                OutDate = DateTime.Now.AddDays(3),
+                InDate = entity.ReservationReservesRoom.InDate,
+                NumberOfDays = entity.ReservationReservesRoom.NumberOfDays,
+                OutDate = entity.ReservationReservesRoom.InDate.AddDays(entity.ReservationReservesRoom.NumberOfDays),
                 Reservation = reservation,
                 ReservationId = reservation.ReservationId,
                 Room = _context.Rooms.FirstOrDefault(r => r.RoomNo == entity.RoomNo),

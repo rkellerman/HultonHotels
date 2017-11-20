@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using HultonHotels.Models;
 
 namespace HultonHotels.ViewModels.Objects
@@ -16,6 +17,11 @@ namespace HultonHotels.ViewModels.Objects
         public decimal Price { get; set; }
         public int Capacity { get; set; }
         public CreditCard CreditCard { get; set; }
+        public ReservationReservesRoom ReservationReservesRoom { get; set; }
+        public SelectListItem[] BreakfastItems { get; set; }
+        public string BreakfastChoice { get; set; }
+        public SelectListItem[] ServiceItems { get; set; }
+        public string ServiceChoice { get; set; }
 
     }
 }

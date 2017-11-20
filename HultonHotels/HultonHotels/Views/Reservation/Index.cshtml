@@ -79,37 +79,76 @@
                     </div>
                 </div>
                 <!--END MESSAGE AREA-->
-                <div class="col">
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Entity.HotelAddress, "Hotel Address")
-                        @Html.TextBoxFor(m => m.Entity.HotelAddress, new { @class = "form-control", disabled = "disabled" })
-                        @Html.HiddenFor(m => m.Entity.HotelAddress)
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.HotelAddress, "Hotel Address")
+                            @Html.TextBoxFor(m => m.Entity.HotelAddress, new { @class = "form-control", disabled = "disabled" })
+                            @Html.HiddenFor(m => m.Entity.HotelAddress)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.RoomNo, "Room Number")
+                            @Html.TextBoxFor(m => m.Entity.RoomNo, new { @class = "form-control", disabled = "disabled" })
+                            @Html.HiddenFor(m => m.Entity.RoomNo)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.Price, "Price Per Night")
+                            @Html.TextBoxFor(m => m.Entity.Price, new { @class = "form-control", disabled = "disabled" })
+                            @Html.HiddenFor(m => m.Entity.Price)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.Capacity, "Capacity")
+                            @Html.TextBoxFor(m => m.Entity.Capacity, new { @class = "form-control", disabled = "disabled" })
+                            @Html.HiddenFor(m => m.Entity.Capacity)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.ReservationReservesRoom.InDate, "Check In")
+                            @Html.TextBoxFor(m => m.Entity.ReservationReservesRoom.InDate, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.ReservationReservesRoom.NumberOfDays, "Number Of Days")
+                            @Html.TextBoxFor(m => m.Entity.ReservationReservesRoom.NumberOfDays, new { @class = "form-control" })
+                        </div>
+
+                        <div>
+                            @Html.HiddenFor(m => m.Entity.HotelId)
+                            @Html.HiddenFor(m => m.Entity.CustomerId)
+                        </div>
                     </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Entity.RoomNo, "Room Number")
-                        @Html.TextBoxFor(m => m.Entity.RoomNo, new { @class = "form-control", disabled = "disabled" })
-                        @Html.HiddenFor(m => m.Entity.RoomNo)
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.BreakfastItems, "Breakfast Options")
+                            @Html.DropDownListFor(m => m.Entity.BreakfastChoice, Model.Entity.BreakfastItems, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.ServiceItems, "Service Options")
+                            @Html.DropDownListFor(m => m.Entity.ServiceChoice, Model.Entity.ServiceItems, new { @class = "form-control" })
+                        </div>
                     </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Entity.Price, "Price Per Night")
-                        @Html.TextBoxFor(m => m.Entity.Price, new { @class = "form-control", disabled = "disabled" })
-                        @Html.HiddenFor(m => m.Entity.Price)
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.CreditCard.CreditCardId, "Credit Card Number")
+                            @Html.TextBoxFor(m => m.Entity.CreditCard.CreditCardId, new {@class = "form-control"})
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.CreditCard.SecurityCode, "Security Code")
+                            @Html.TextBoxFor(m => m.Entity.CreditCard.SecurityCode, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.CreditCard.Type, "Type")
+                            @Html.TextBoxFor(m => m.Entity.CreditCard.Type, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.CreditCard.NameOnCard, "Name On Card")
+                            @Html.TextBoxFor(m => m.Entity.CreditCard.NameOnCard, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(m => m.Entity.CreditCard.ExpDate, "Expiration")
+                            @Html.TextBoxFor(m => m.Entity.CreditCard.ExpDate, new { @class = "form-control" })
+                        </div>
+                        
                     </div>
-                    <div class="form-group">
-                        @Html.LabelFor(m => m.Entity.Capacity, "Capacity")
-                        @Html.TextBoxFor(m => m.Entity.Capacity, new { @class = "form-control", disabled = "disabled" })
-                        @Html.HiddenFor(m => m.Entity.Capacity)
-                    </div>
-                    <div class="form-group">
-                    </div>
-                    <div>
-                        @Html.HiddenFor(m => m.Entity.HotelId)
-                        @Html.HiddenFor(m => m.Entity.CustomerId)
-                    </div>
-                </div>
-                <div class="col">
-                    @Html.LabelFor(m => m.Entity.CreditCard.CreditCardId, "Credit Card Number")
-                    @Html.TextBoxFor(m => m.Entity.CreditCard.CreditCardId, new { @class = "form-control"})
+
                 </div>
             </div>
             <div class="panel-footer">
@@ -144,7 +183,7 @@
                     <tr>
                         <th>Hotel Address</th>
                         <th>Room Number</th>
-                        <th>Price</th>
+                        <th>Price Per Night</th>
                         <th>Capacity</th>
                         <th class="pdsa-action-button-column">Cancel</th>
                     </tr>
