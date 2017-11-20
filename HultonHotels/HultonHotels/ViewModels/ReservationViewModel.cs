@@ -11,8 +11,9 @@ namespace HultonHotels.ViewModels
 {
     public class ReservationViewModel
     {
-        public int CurrentUserId { get; set; }
+        public int CurrentUserId { get; set; } = -1;
         public List<ReservationObject> Items { get; set; }
+        public List<ReservationObject> MyItems { get; set; }    
         public ReservationObject SearchEntity { get; set; }
         public ReservationObject Entity { get; set; }
         public ReservationObject PrevEntity { get; set; }
@@ -27,6 +28,15 @@ namespace HultonHotels.ViewModels
         public bool IsSearchAreaVisible { get; set; }
         public bool IsListAreaVisible { get; set; }
         public bool IsPopUpAreaVisible { get; set; }
+        public bool IsMyReservationsAreaVisible { get; set; }
+
+        public string ByPass { get; set; }
+
+        public int CurrentPage { get; set; }
+        public int TotalPages { get; set; }
+        public int ItemsPerPage { get; set; } = 10;
+
+        public List<int> Pagination { get; set; }
 
         public ReservationViewModel()
         {
@@ -58,13 +68,37 @@ namespace HultonHotels.ViewModels
                     Save();
                     Get();
                     break;
+                case "delete":
+                    Delete();
+                    break;
                 default:
                     break;
 
             }
         }
 
-        
+        private void Delete()
+        {
+            var mgr = new ReservationManager();
+
+            if (string.IsNullOrEmpty(ByPass))
+            {
+                Entity.HotelId = int.Parse(EventArgument);
+                Entity.RoomNo = int.Parse(PrevEventArgument);
+
+
+                mgr.Delete(Entity);
+            }
+
+            EventArgument = string.Empty;
+            PrevEventArgument = string.Empty;
+            ByPass = string.Empty;
+
+            Get();
+            ListMode();
+        }
+
+
 
         private void Save()
         {
@@ -100,6 +134,7 @@ namespace HultonHotels.ViewModels
             IsSearchAreaVisible = false;
             IsDetailAreaVisible = true;
             IsPopUpAreaVisible = false;
+            IsMyReservationsAreaVisible = false;
 
             Mode = "select";
         }
@@ -108,7 +143,9 @@ namespace HultonHotels.ViewModels
         {
 
             var mgr = new ReservationManager();
-            Items = mgr.Get(SearchEntity);
+            var ret = mgr.Get(SearchEntity);
+            Items = ret[0];
+            MyItems = ret[1];
 
         }
 
@@ -128,6 +165,7 @@ namespace HultonHotels.ViewModels
             IsSearchAreaVisible = true;
             IsDetailAreaVisible = false;
             IsPopUpAreaVisible = false;
+            IsMyReservationsAreaVisible = true;
 
             Mode = "List";
         }

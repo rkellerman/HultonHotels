@@ -16,7 +16,7 @@ namespace HultonHotels.Models
             _context = new ApplicationDbContext();
         }
 
-        public List<ReservationObject> Get(ReservationObject entity)
+        public List<List<ReservationObject>> Get(ReservationObject entity)
         {
             List<ReservationObject> ret = new List<ReservationObject>();
             ret = CreateData();
@@ -25,8 +25,39 @@ namespace HultonHotels.Models
             {
                 // refine list
             }
+            var ret2 = new List<ReservationObject>();
+            if (!string.IsNullOrEmpty(entity.Email))
+            {
+                var customer = _context.Customers.FirstOrDefault(c => c.Email == entity.Email);
+                var customerMakesReservationsWithCreditCard = _context.CustomerMakesReservationWithCreditCards
+                    .Where(c => c.CustomerId == customer.CustomerId).ToList();
+                foreach (var customerMakesReservationWithCreditCard in customerMakesReservationsWithCreditCard)
+                {
+                    var reservationReservesRoom = _context.ReservationReservesRooms.FirstOrDefault(r =>
+                        r.ReservationId == customerMakesReservationWithCreditCard.ReservationId);
 
-            return ret;
+                    var hotel = _context.Hotels.FirstOrDefault(h => h.HotelId == reservationReservesRoom.HotelId);
+                    var room = _context.Rooms.FirstOrDefault(r =>
+                        r.HotelId == hotel.HotelId && r.RoomNo == reservationReservesRoom.RoomNo);
+
+                    var obj = new ReservationObject
+                    {
+                        HotelAddress = hotel.Street + ", " + hotel.City + ", " + hotel.State + " " + hotel.Zip,
+                        RoomNo = reservationReservesRoom.RoomNo,
+                        Capacity = room.Capacity,
+                        HotelId = hotel.HotelId,
+                        Price = room.Price
+                    };
+
+                    ret2.Add(obj);
+                }
+
+            }
+
+            return new List<List<ReservationObject>>
+            {
+                ret, ret2
+            };
         }
 
         private List<ReservationObject> CreateData()
@@ -35,6 +66,8 @@ namespace HultonHotels.Models
             var ret = new List<ReservationObject>();
 
             var hotels = _context.Hotels.ToList();
+
+            var reservationsReserveRooms = _context.ReservationReservesRooms.ToList();
 
             foreach (var hotel in hotels)
             {
@@ -51,9 +84,13 @@ namespace HultonHotels.Models
                         Price = room.Price
                     };
 
+
+
                     ret.Add(obj);
                 }
             }
+
+            ret = ret.Where(r => !reservationsReserveRooms.Any(r2 => r2.RoomNo == r.RoomNo && r2.HotelId == r.HotelId)).ToList();
             return ret;
         }
 
@@ -93,18 +130,24 @@ namespace HultonHotels.Models
                 ReservationDate = DateTime.Now
             };
 
-            var creditCard = new CreditCard
-            {
-                BillingAddress = entity.CreditCard.BillingAddress,
-                CreditCardId = entity.CreditCard.CreditCardId,
-                ExpDate = DateTime.Now,
-                NameOnCard = entity.CreditCard.NameOnCard,
-                SecurityCode = entity.CreditCard.SecurityCode,
-                Type = entity.CreditCard.Type
-            };
+            var creditCard = _context.CreditCards.FirstOrDefault(c => c.CreditCardId == entity.CreditCard.CreditCardId);
+
+            if (creditCard == null) {
+                creditCard = new CreditCard
+                {
+                    BillingAddress = entity.CreditCard.BillingAddress,
+                    CreditCardId = entity.CreditCard.CreditCardId,
+                    ExpDate = DateTime.Now,
+                    NameOnCard = entity.CreditCard.NameOnCard,
+                    SecurityCode = entity.CreditCard.SecurityCode,
+                    Type = entity.CreditCard.Type
+                };
+
+                _context.CreditCards.Add(creditCard);
+            }
 
             _context.Reservations.Add(reservation);
-            _context.CreditCards.Add(creditCard);
+            
             _context.SaveChanges();
 
             var customerMakesReservationWithCreditCard = new CustomerMakesReservationWithCreditCard
@@ -117,7 +160,37 @@ namespace HultonHotels.Models
                 ReservationId = reservation.ReservationId
             };
 
+            var reservationReservesRoom = new ReservationReservesRoom
+            {
+                HotelId = entity.HotelId,
+                InDate = DateTime.Now,
+                NumberOfDays = 3,
+                OutDate = DateTime.Now.AddDays(3),
+                Reservation = reservation,
+                ReservationId = reservation.ReservationId,
+                Room = _context.Rooms.FirstOrDefault(r => r.RoomNo == entity.RoomNo),
+                RoomNo = entity.RoomNo
+            };
+
+            _context.ReservationReservesRooms.Add(reservationReservesRoom);
             _context.CustomerMakesReservationWithCreditCards.Add(customerMakesReservationWithCreditCard);
+            _context.SaveChanges();
+        }
+
+        public void Delete(ReservationObject entity)
+        {
+            var reservationReservesRoom =
+                _context.ReservationReservesRooms.Include(r => r.Reservation).FirstOrDefault(r =>
+                    r.RoomNo == entity.RoomNo && r.HotelId == entity.HotelId);
+            var customerMakesReservationWithCreditCard =
+                _context.CustomerMakesReservationWithCreditCards.FirstOrDefault(r =>
+                    r.ReservationId == reservationReservesRoom.ReservationId);
+
+            _context.CustomerMakesReservationWithCreditCards.Remove(customerMakesReservationWithCreditCard);
+
+            var reservation = reservationReservesRoom.Reservation;
+
+            _context.Reservations.Remove(reservation);
             _context.SaveChanges();
         }
     }

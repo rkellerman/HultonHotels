@@ -130,33 +130,25 @@
         </div>
     }
 
-    <!--BEGIN LIST AREA-->
-    if (Model.IsListAreaVisible)
+    <!--BEGIN MY RESERVATIONS AREA-->
+    if (Model.IsMyReservationsAreaVisible)
     {
         <div class="table-respnosive">
             <table class="table table-condensed table-bordered table-striped table-hover">
                 <thead>
                     <tr>
-                        <th class="pdsa-action-button-column">Edit</th>
                         <th>Hotel Address</th>
                         <th>Room Number</th>
                         <th>Price</th>
                         <th>Capacity</th>
-                        <th class="pdsa-action-button-column">Delete</th>
+                        <th class="pdsa-action-button-column">Cancel</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model.Items)
+                    @foreach (var item in Model.MyItems)
                     {
 
                         <tr>
-                            <td class="pdsa-action-button-column">
-                                <a href="#" class="btn btn-default btn-sm" data-pdsa-action="select"
-                                   data-pdsa-val="@item.HotelId"
-                                   data-pdsa-val-2="@item.RoomNo">
-                                    <i class="glyphicon glyphicon-edit"></i>
-                                </a>
-                            </td>
                             <td>@item.HotelAddress</td>
                             <td>@item.RoomNo</td>
                             <td>@item.Price </td>
@@ -175,7 +167,47 @@
             </table>
         </div>
     }
+    <!--END MY RESERVATIONS AREA-->
+
+    <!--BEGIN LIST AREA-->
+    if (Model.IsListAreaVisible)
+    {
+        <div class="table-respnosive">
+            <table class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th class="pdsa-action-button-column">View Options</th>
+                        <th>Hotel Address</th>
+                        <th>Room Number</th>
+                        <th>Price</th>
+                        <th>Capacity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Items)
+                    {
+
+                        <tr>
+                            <td class="pdsa-action-button-column">
+                                <a href="#" class="btn btn-default btn-sm" data-pdsa-action="select"
+                                   data-pdsa-val="@item.HotelId"
+                                   data-pdsa-val-2="@item.RoomNo">
+                                    <i class="glyphicon glyphicon-edit"></i>
+                                </a>
+                            </td>
+                            <td>@item.HotelAddress</td>
+                            <td>@item.RoomNo</td>
+                            <td>@item.Price </td>
+                            <td>@item.Capacity</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
     <!--END LIST AREA-->
+
+
 }
 
 @section scripts {
@@ -193,5 +225,12 @@
 
                 });
         });
+
+        function confirmation() {
+            var answer = confirm("Cancel this reservation?");
+            if (!answer) {
+                $("#ByPass").val("BYPASS");
+            }
+        }
     </script>
 }
