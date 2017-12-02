@@ -72,10 +72,43 @@ namespace HultonHotels.ViewModels
                 case "delete":
                     Delete();
                     break;
+                case "view":
+                    View();
+                    break;
+                case "cancel":
+                    Get();
+                    break;
+                case "review":
+                    WriteReview();
+                    break;
                 default:
                     break;
 
             }
+        }
+
+        private void WriteReview()
+        {
+            throw new NotImplementedException();
+        }
+
+        private void View()
+        {
+            var mgr = new ReservationManager();
+            Entity = mgr.View(EventArgument, PrevEventArgument);
+
+            ViewMode();
+        }
+
+        private void ViewMode()
+        {
+            IsListAreaVisible = false;
+            IsSearchAreaVisible = false;
+            IsDetailAreaVisible = true;
+            IsPopUpAreaVisible = false;
+            IsMyReservationsAreaVisible = false;
+
+            Mode = "view";
         }
 
         private void Delete()
@@ -103,6 +136,10 @@ namespace HultonHotels.ViewModels
 
         private void Save()
         {
+            if (Mode == "view")
+            {
+                return;
+            }
             var mgr = new ReservationManager();
             mgr.Save(Entity, SearchEntity.Email);
 

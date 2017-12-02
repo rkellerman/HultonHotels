@@ -208,9 +208,17 @@
     <Compile Include="Migrations\201711151513282_InitialMigration.Designer.cs">
       <DependentUpon>201711151513282_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712021545171_VariousReviews.cs" />
+    <Compile Include="Migrations\201712021545171_VariousReviews.Designer.cs">
+      <DependentUpon>201712021545171_VariousReviews.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
+    <Compile Include="Models\Entities\BreakfastReview.cs" />
+    <Compile Include="Models\Entities\RoomReview.cs" />
+    <Compile Include="Models\Entities\ServiceReview.cs" />
+    <Compile Include="Models\Relationships\BreakfastReviewAssessesBreakfast.cs" />
     <Compile Include="Models\Relationships\CustomerMakesReservationWithCreditCard.cs" />
     <Compile Include="Models\Relationships\CustomerWritesReview.cs" />
     <Compile Include="Models\Entities\Breakfast.cs" />
@@ -229,6 +237,8 @@
     <Compile Include="Models\Relationships\ReservationContainsService.cs" />
     <Compile Include="Models\Relationships\ReservationIncludesBreakfast.cs" />
     <Compile Include="Models\Relationships\ReservationReservesRoom.cs" />
+    <Compile Include="Models\Relationships\RoomReviewEvaluatesRoom.cs" />
+    <Compile Include="Models\Relationships\ServiceReviewRatesService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
     <Compile Include="Utilities\PaginationHelper.cs" />
@@ -315,6 +325,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201711151513282_InitialMigration.resx">
       <DependentUpon>201711151513282_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712021545171_VariousReviews.resx">
+      <DependentUpon>201712021545171_VariousReviews.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

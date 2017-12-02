@@ -246,5 +246,69 @@ namespace HultonHotels.Models
             _context.Reservations.Remove(reservation);
             _context.SaveChanges();
         }
+
+        public ReservationObject View(string eventArgument, string prevEventArgument)
+        {
+            var hotelId = int.Parse(eventArgument);
+            var roomNo = int.Parse(prevEventArgument);
+
+            var tempObj = _context.Rooms.Include(h => h.Hotel)
+                .FirstOrDefault(r => r.RoomNo == roomNo && r.HotelId == hotelId);
+
+            var hotel = tempObj.Hotel;
+            var room = tempObj;
+
+            var breakfasts = _context.Breakfasts.Where(b => b.HotelId == hotelId).ToList();
+            var services = _context.Services.Where(s => s.HotelId == hotelId).ToList();
+
+            var breakfastList = new SelectListItem[breakfasts.Count];
+
+            for (var i = 0; i < breakfasts.Count; i++)
+            {
+                breakfastList[i] = new SelectListItem { Text = breakfasts[i].BreakfastType, Value = breakfasts[i].BreakfastType };
+            }
+
+            var serviceList = new SelectListItem[services.Count];
+
+            for (var i = 0; i < services.Count; i++)
+            {
+                serviceList[i] = new SelectListItem { Text = services[i].ServiceType, Value = services[i].ServiceType };
+            }
+
+            var reservation =
+                _context.ReservationReservesRooms.Include(r => r.Reservation).FirstOrDefault(r => r.HotelId == hotelId && r.RoomNo == roomNo).Reservation;
+
+            var breakfast = _context.ReservationIncludesBreakfasts.Include(r => r.Breakfast)
+                .FirstOrDefault(r => r.ReservationId == reservation.ReservationId).Breakfast;
+
+            var service = _context.ReservationContainsServices.Include(r => r.Service)
+                .FirstOrDefault(r => r.ReservationId == reservation.ReservationId).Service;
+
+            var temp = _context.CustomerMakesReservationWithCreditCards.Include(c => c.Customer).Include(c => c.CreditCard)
+                .FirstOrDefault(r => r.ReservationId == reservation.ReservationId);
+
+            var customer = temp.Customer;
+            var creditCard = temp.CreditCard;
+
+            var reservationObject = new ReservationObject
+            {
+                HotelId = hotelId,
+                BreakfastChoice = breakfast.BreakfastType,
+                Capacity = room.Capacity,
+                CreditCard = creditCard,
+                CustomerId = customer.CustomerId,
+                BreakfastItems = breakfastList,
+                Email = customer.Email,
+                HotelAddress = hotel.Street + ", " + hotel.City + ", " + hotel.State + " " + hotel.Zip,
+                Price = room.Price,
+                ServiceItems = serviceList,
+                ServiceChoice = service.ServiceType,
+                RoomNo = roomNo
+
+            };
+            
+
+            return reservationObject;
+        }
     }
 }

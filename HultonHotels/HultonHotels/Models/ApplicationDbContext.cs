@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using HultonHotels.Models.Entities;
 using HultonHotels.Models.Relationships;
 using Microsoft.AspNet.Identity.EntityFramework;
 
@@ -19,6 +20,9 @@ namespace HultonHotels.Models
         public DbSet<Service> Services { get; set; }
         public DbSet<Breakfast> Breakfasts { get; set; }
         public DbSet<Reservation> Reservations { get; set; }
+        public DbSet<RoomReview> RoomReviews { get; set; }
+        public DbSet<BreakfastReview> BreakfastReviews { get; set; }
+        public DbSet<ServiceReview> ServiceReviews { get; set; }
 
         /*
          * Relationships
@@ -29,6 +33,9 @@ namespace HultonHotels.Models
         public DbSet<CustomerMakesReservationWithCreditCard> CustomerMakesReservationWithCreditCards { get; set; }
         public DbSet<ReservationIncludesBreakfast> ReservationIncludesBreakfasts { get; set; }
         public DbSet<ReservationContainsService> ReservationContainsServices { get; set; }
+        public DbSet<RoomReviewEvaluatesRoom> RoomReviewEvaluatesRooms { get; set; }
+        public DbSet<BreakfastReviewAssessesBreakfast> BreakfastReviewAssessesBreakfasts { get; set; }
+        public DbSet<ServiceReviewRatesService> ServiceReviewRatesServices { get; set; }
 
 
 

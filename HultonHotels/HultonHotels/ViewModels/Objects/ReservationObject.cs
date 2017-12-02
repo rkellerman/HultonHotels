@@ -22,6 +22,7 @@ namespace HultonHotels.ViewModels.Objects
         public string BreakfastChoice { get; set; }
         public SelectListItem[] ServiceItems { get; set; }
         public string ServiceChoice { get; set; }
+        public Review Review { get; set; }
 
     }
 }
