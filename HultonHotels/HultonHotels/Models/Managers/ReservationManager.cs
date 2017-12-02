@@ -4,6 +4,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using HultonHotels.Models.Entities;
 using HultonHotels.Models.Relationships;
 using HultonHotels.ViewModels.Objects;
 
@@ -290,6 +291,14 @@ namespace HultonHotels.Models
             var customer = temp.Customer;
             var creditCard = temp.CreditCard;
 
+            var reviewList = new SelectListItem[]
+            {
+                new SelectListItem {Text = "Room Review", Value = "0" },
+                new SelectListItem {Text = "Breakfast Review", Value = "1" },
+                new SelectListItem {Text = "Service Review", Value = "2" }
+            };
+            
+
             var reservationObject = new ReservationObject
             {
                 HotelId = hotelId,
@@ -303,12 +312,118 @@ namespace HultonHotels.Models
                 Price = room.Price,
                 ServiceItems = serviceList,
                 ServiceChoice = service.ServiceType,
-                RoomNo = roomNo
+                RoomNo = roomNo,
+                ReviewChoice = reviewList[0].Value,
+                ReviewItems = reviewList,
+                Review = new Review()
 
             };
             
 
             return reservationObject;
+        }
+
+        public void WriteReview(ReservationObject entity)
+        {
+            var review = new Review
+            {
+                Comment = entity.Review.Comment,
+                Rating = entity.Review.Rating
+            };
+
+            var customer = _context.Customers.FirstOrDefault(c => c.CustomerId == entity.CustomerId);
+
+            _context.Reviews.Add(review);
+
+            var customerWritesReview = new CustomerWritesReview
+            {
+                Customer = customer,
+                CustomerId = customer.CustomerId,
+                Review = review,
+                ReviewId = review.ReviewId
+            };
+
+            _context.CustomerWritesReviews.Add(customerWritesReview);
+
+            RoomReview roomReview = null;
+            BreakfastReview breakfastReview = null;
+            ServiceReview serviceReview = null;
+
+            int value = int.Parse(entity.ReviewChoice);
+
+            switch (value)
+            {
+                case 0:
+                    roomReview = new RoomReview
+                    {
+                        Review = review,
+                        ReviewId = review.ReviewId
+                    };
+
+                    var roomReviewRatesRoom = new RoomReviewEvaluatesRoom
+                    {
+                        RoomReview = roomReview,
+                        HotelId = entity.HotelId,
+                        ReviewId = review.ReviewId,
+                        Room = _context.Rooms.FirstOrDefault(r => r.RoomNo == entity.RoomNo),
+                        RoomNo = entity.RoomNo
+                    };
+
+                    _context.RoomReviews.Add(roomReview);
+                    _context.RoomReviewEvaluatesRooms.Add(roomReviewRatesRoom);
+
+                    break;
+
+                case 1:
+                    breakfastReview = new BreakfastReview
+                    {
+                        Review = review,
+                        ReviewId = review.ReviewId
+                    };
+
+                    var breakfast = _context.Breakfasts.FirstOrDefault(b => b.BreakfastType == entity.BreakfastChoice);
+
+                    var breakfastReviewRates = new BreakfastReviewAssessesBreakfast
+                    {
+                        BreakfastReview = breakfastReview,
+                        Breakfast = breakfast,
+                        BreakfastType = breakfast.BreakfastType,
+                        HotelId = entity.HotelId,
+                        ReviewId = review.ReviewId
+                    };
+
+                    _context.BreakfastReviews.Add(breakfastReview);
+                    _context.BreakfastReviewAssessesBreakfasts.Add(breakfastReviewRates);
+
+                    break;
+                case 2:
+                    var service = _context.Services.FirstOrDefault(s => s.ServiceType == entity.ServiceChoice);
+
+                    serviceReview = new ServiceReview
+                    {
+                        Review = review,
+                        ReviewId = review.ReviewId
+                    };
+
+                    var serviceReviewRatesService = new ServiceReviewRatesService
+                    {
+                        ServiceReview = serviceReview,
+                        Service = service,
+                        HotelId = entity.HotelId,
+                        ReviewId = review.ReviewId,
+                        ServiceType = service.ServiceType
+                    };
+
+                    _context.ServiceReviews.Add(serviceReview);
+                    _context.ServiceReviewRatesServices.Add(serviceReviewRatesService);
+
+                    break;
+                default:
+                    break;
+            }
+
+            _context.SaveChanges();
+
         }
     }
 }

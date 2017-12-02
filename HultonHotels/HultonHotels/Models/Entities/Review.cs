@@ -11,7 +11,7 @@ namespace HultonHotels.Models
         [Key]
         public int ReviewId { get; set; }
 
-        public int Ratin { get; set; }
+        public int Rating { get; set; }
         public string Comment { get; set; }
     }
 }

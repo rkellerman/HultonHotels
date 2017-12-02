@@ -80,6 +80,7 @@ namespace HultonHotels.ViewModels
                     break;
                 case "review":
                     WriteReview();
+                    View();
                     break;
                 default:
                     break;
@@ -89,7 +90,8 @@ namespace HultonHotels.ViewModels
 
         private void WriteReview()
         {
-            throw new NotImplementedException();
+            var mgr = new ReservationManager();
+            mgr.WriteReview(Entity);
         }
 
         private void View()

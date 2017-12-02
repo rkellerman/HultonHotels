@@ -212,6 +212,10 @@
     <Compile Include="Migrations\201712021545171_VariousReviews.Designer.cs">
       <DependentUpon>201712021545171_VariousReviews.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201712021557138_FixedTypo.cs" />
+    <Compile Include="Migrations\201712021557138_FixedTypo.Designer.cs">
+      <DependentUpon>201712021557138_FixedTypo.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
@@ -328,6 +332,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712021545171_VariousReviews.resx">
       <DependentUpon>201712021545171_VariousReviews.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201712021557138_FixedTypo.resx">
+      <DependentUpon>201712021557138_FixedTypo.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
