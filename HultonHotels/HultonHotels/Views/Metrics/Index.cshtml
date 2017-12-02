@@ -1,7 +1,85 @@
-﻿
+﻿@model HultonHotels.ViewModels.MetricsViewModel
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Metrics";
 }
 
-<h2>Index</h2>
+<h2>Metrics</h2>
 
+@using(Html.BeginForm()){
+
+    <!--BEGIN HIDDEN FIELD AREA-->
+    @Html.HiddenFor(m => m.EventArgument)
+    @Html.HiddenFor(m => m.EventCommand)
+    @Html.HiddenFor(m => m.PrevEventArgument)
+    @Html.HiddenFor(m => m.PrevEntity)
+    @Html.HiddenFor(m => m.Mode)
+
+
+    <!--END HIDDEN FIELD AREA-->
+
+    
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h1 class="panel-title">Highest Rating At Each Location</h1>
+        </div>
+        <div class="panel-body">
+            <div class="table-respnosive">
+                <table class="table table-condensed table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Hotel Address</th>
+                        <th>Highest Rated Room</th>
+                        <th>Highest Rated Service</th>
+                        <th>Highest Rated Breakfast</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @for (var i = 0; i < Model.Entity.Hotels.Count; i++)
+                    {
+
+                        <tr>
+                            <td>@Model.Entity.Hotels[i].Street</td>
+                            <td>@(Model.Entity.Rooms[i]?.Type ?? "NA")</td>
+                            <td>@(Model.Entity.Services[i]?.ServiceType ?? "NA")</td>
+                            <td>@(Model.Entity.Breakfasts[i]?.BreakfastType ?? "NA")</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+        </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <h1 class="panel-title">Highest Spending Customers</h1>
+        </div>
+        <div class="panel-body">
+            <div class="table-respnosive">
+                <table class="table table-condensed table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>Customer Name</th>
+                        <th>Amount spent</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        @for (var i = 0; i < Model.Entity.Customers.Count; i++)
+                        {
+
+                            <tr>
+                                <td>@(i+1)</td>
+                                <td>@Model.Entity.Customers[i].Name</td>
+                                <td>Not calculated</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="panel-footer">
+        </div>
+    </div>
+}

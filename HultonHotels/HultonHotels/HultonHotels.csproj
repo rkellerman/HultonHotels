@@ -222,6 +222,7 @@
     <Compile Include="Models\Entities\BreakfastReview.cs" />
     <Compile Include="Models\Entities\RoomReview.cs" />
     <Compile Include="Models\Entities\ServiceReview.cs" />
+    <Compile Include="Models\MetricsObject.cs" />
     <Compile Include="Models\Relationships\BreakfastReviewAssessesBreakfast.cs" />
     <Compile Include="Models\Relationships\CustomerMakesReservationWithCreditCard.cs" />
     <Compile Include="Models\Relationships\CustomerWritesReview.cs" />

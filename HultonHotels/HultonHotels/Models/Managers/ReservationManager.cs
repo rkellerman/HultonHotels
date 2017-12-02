@@ -315,7 +315,11 @@ namespace HultonHotels.Models
                 RoomNo = roomNo,
                 ReviewChoice = reviewList[0].Value,
                 ReviewItems = reviewList,
-                Review = new Review()
+                Review = new Review
+                {
+                    Comment = "",
+                    Rating = 1
+                }
 
             };
             
