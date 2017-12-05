@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Web;
 using HultonHotels.Models;
@@ -28,7 +29,11 @@ namespace HultonHotels.ViewModels
             Init();
             
             SearchEntity = new MetricsObject();
-            Entity = new MetricsObject();
+            Entity = new MetricsObject
+            {
+                StartDate = SqlDateTime.MinValue.Value,
+                EndDate = DateTime.Now
+            };
             EventCommand = "list";
         }
 

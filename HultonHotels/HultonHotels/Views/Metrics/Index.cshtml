@@ -3,6 +3,10 @@
     ViewBag.Title = "Metrics";
 }
 
+@Styles.Render("~/Content/themes/base/css")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/jqueryui")
+
 <h2>Metrics</h2>
 
 @using(Html.BeginForm()){
@@ -16,7 +20,21 @@
 
 
     <!--END HIDDEN FIELD AREA-->
-
+    <div class="form-group">
+        <div class="row">
+            <div class="col-sm-2">
+                @Html.LabelFor(m => m.Entity.StartDate, "Start Date")
+                @Html.TextBoxFor(m => m.Entity.StartDate, new {@class="form-control"})
+            </div>
+            <div class="col-sm-2">
+                @Html.LabelFor(m => m.Entity.EndDate, "End Date")
+                @Html.TextBoxFor(m => m.Entity.EndDate, new { @class = "form-control" })
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" onclick="Go()" class="btn btn-primary btn-sm form-control">Go</button>
+            </div>
+        </div>
+    </div>
     
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -82,4 +100,13 @@
         <div class="panel-footer">
         </div>
     </div>
+}
+
+@section scripts {
+    <script>
+
+        function Go() {
+            $("form").submit();
+        }
+    </script>
 }

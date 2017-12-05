@@ -332,7 +332,8 @@ namespace HultonHotels.Models
             var review = new Review
             {
                 Comment = entity.Review.Comment,
-                Rating = entity.Review.Rating
+                Rating = entity.Review.Rating,
+                Date = DateTime.Now
             };
 
             var customer = _context.Customers.FirstOrDefault(c => c.CustomerId == entity.CustomerId);
