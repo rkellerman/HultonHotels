@@ -21,7 +21,7 @@ namespace HultonHotels.Migrations
 
         protected override void Seed(HultonHotels.Models.ApplicationDbContext context)
         {
-            /*
+            
 
             var serviceTypes = new List<string>
             {
@@ -130,7 +130,7 @@ namespace HultonHotels.Migrations
 
 
             }
-            */
+            
 
 
             
