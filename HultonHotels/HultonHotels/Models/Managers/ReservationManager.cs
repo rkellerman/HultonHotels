@@ -26,7 +26,7 @@ namespace HultonHotels.Models
 
             if (!string.IsNullOrEmpty(entity.HotelAddress))
             {
-                // refine list
+                ret = ret.FindAll(r => r.HotelAddress.ToLower().Contains(entity.HotelAddress.ToLower()));
             }
             var ret2 = new List<ReservationObject>();
             if (!string.IsNullOrEmpty(entity.Email))
